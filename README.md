@@ -35,4 +35,18 @@ http://localhost/your-application/users/main
 
 I am also added UsersController.php file for this main method.
 
+
+=================================================================================================================
+
+<b>How to test it without Cakephp ?</b>
+--------------------------------
+
+You could also check the open graph example by copying opengraph folder in your www directory and access it using following url.
+
+http://localhost/opengraph
+
+==================================================================================================================
+
+ParagKuhikar @http://justprogrammer.com & http://kuhikar.com
+
  
