@@ -5,122 +5,34 @@ Open graph integration for Cakephp
 
 First of all download this code and move opengraph directory to app/Vendor directory.
 
-After that, in your controller's view method include OpenGraph Vendor.
+Also created Sample Controller method and ajax response for the opengraph view.
 
-App::import('Vendor', 'opengraph', array('file' => 'opengraph' . DS . 'OpenGraphNode.php'));
+Create view open-graph view method in your controller.
 
-And Write following code in your controller.
+I am assuming you have OpenGraphController.php file.
 
-<pre>
+In your OpenGraphController.php file.
 
-function opengraph($url = ""){
-    	$url = trim($this->data['url']);
-    	$this->layout = false; 
-    	if($url != "" && (filter_var($url, FILTER_VALIDATE_URL)))
-    	{
-    		
-	    	App::import('Vendor', 'opengraph', array('file' => 'opengraph' . DS . 'OpenGraphNode.php'));
-	    	    	 
-			# Fetch and parse a URL
-			#
-			$page = $url;
-			$node = new OpenGraphNode($page); 
-			# Retrieve the title
-			#  
-			
-		
-			$image = $desc = $title = $url = "" ;
-			foreach ($node as $key => $value) {
-				if($node->is_str_contain($key,"image") && getimagesize($value)) {
-					$image = $value; 
-					 
-				} if( ($node->is_str_contain($key,"description"))){
-					 $desc = $value;
-				//die("description");
-				} if($node->is_str_contain($key,"title")){
-				  $title = $value;	
-				}if($node->is_str_contain($key,"url") && (filter_var($value, FILTER_VALIDATE_URL))){ 
-				  	
-				  $url = $value;	
-				}if($node->is_str_contain($key,"content")){ 
-				  preg_match_all('/src="([^"]*)"/', $value, $result);
-			      	  $image = isset($result[1][0]) ? $result[1][0] : ("");	
-				}
-				
-			
-			}
-		
-			$urlData =  parse_url($page);
-		
-			
-			$host = $urlData['host'];
-			$image = ($image != "") ? ($image) : ("");
-			$desc = ($desc != "") ? ($desc) : ( "");
-			
-			if($desc == "" || $image == ""){
-				$data = $node->image();
-				 
-				if($image == ""){
-				    $image = (isset($data['image']) &&  trim($data['image']) != "" ) ? $data['image'] :  ( isset($data['icon']) && trim($data['icon']) != "" ? $data['icon'] :  "no-pre.png" ) ;	
-				}
-				if($desc == ""){
-					$desc = (isset($data['description']) && trim($data['description']) != "" )? $data['description'] : "";
-				}
-			}
-			 
-			
-			
-			$this->set('title', $title);
-			$this->set('page', $page);
-			$this->set('host', $host);
-			$this->set('desc', $desc);
-			$this->set('image', $image);
-			 
-    	}   else{
-    	    echo "Please enter valid url"; die();
-    	}	
-    }
+Create function opengraph and copy code from cakephp-view-controler-file/OpenGraphController.php in your controller.
 
-</pre>
+And also create view file named as opengraph.ctp in your view folder of that controller.
 
-And View of the Code is 
+Now copy code cakephp-view-controler-file/opengraph.ctp in that view file.
 
-opengraph.ctp
+This is ajax response view file.
 
-<pre>
-<div style="width:400px;bgcolor:#123423;">
-	<span style="width:100%;">
-		<span style="width:50%;float:left;" >
-	
-	
-		<?php
-if($image == 'no-pre.png'){
-		echo $this->Html->image('no-pre.png', array(
-    	"class" => 'image'
-));
-}else{
-	?>
-		<img src="<?php echo $image;?>"class="image"/>
-	<?php 
-}
-		
-	
-		?>
-		    
-		</span>
-		<span style="width:50%;float:right;"> 
-			<?php echo  (isset($title) && trim($title) != "") ?  "<div class=\"title\">".$title."</div>" : "";?>
-			<?php echo  (isset($page) && trim($page) != "") ?  "<div class=\"url\"><a href='".$page."' title='".$title."'>".$host."</a></div>" : "";?>
-			<?php echo  (isset($desc) && trim($desc) != "") ?  "<div class=\"description\">".$desc."</div>" : "";?>
-			<span style="width:100%;float:right;"> 
-			<input type="checkbox" name="no-thumbnail" class="no-thumbnail" /> No thumbnail
-			</span>
-		</span>
-	</span>
-</div>
-</pre>
+Now, you have to create main file where you are firing ajax request to this controller's method.
 
+I am assuming, you have app/View/Users/main.ctp file.
 
-And if you want to use as php project then you could copy opengraph directory.
+Now, copy code from cakephp-view-controler-file/opengraph.ctp to app/View/Users/main.ctp.
 
-And open the open.php file from the browser.
+And access this url from the browser.
+
+for example :
+
+http://localhost/your-application/users/main
+
+I am also added UsersController.php file for this main method.
+
+ 
